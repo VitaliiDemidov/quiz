@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import "./assets/style.css";
-import quizService from "./quizService";
+import quizService from "./quizService/index";
 import QuestionBox from "./components/QuestionBox";
+import Result from "./components/result";
 class Quiz extends Component {
   state = {
     questionBank: [],
@@ -17,6 +18,7 @@ class Quiz extends Component {
       });
     });
   };
+
   computeAnswer = (answer, correctAnswer) => {
     if (answer === correctAnswer) {
       this.setState({
@@ -25,6 +27,14 @@ class Quiz extends Component {
     }
     this.setState({
       responses: this.state.responses < 5 ? this.state.responses + 1 : 5
+    });
+  };
+
+  playAgain = () => {
+    this.getQuestion();
+    this.setState({
+      score: 0,
+      responses: 0
     });
   };
 
@@ -47,6 +57,10 @@ class Quiz extends Component {
               />
             )
           )}
+
+        {this.state.responses === 5 ? (
+          <Result score={this.state.score} playAgain={this.playAgain} />
+        ) : null}
       </div>
     );
   }
